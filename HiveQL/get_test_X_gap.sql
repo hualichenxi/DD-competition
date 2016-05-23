@@ -1,0 +1,1 @@
+create table test_x_gap1 as select A.id,A.district_id,sum(B.gap) from test_t A left join test_order B on A.district_id = B.start_district_id where (A.id - ((day(B.o_date)-1)*144+B.time_slice))=1 group by A.id,A.district_id;
