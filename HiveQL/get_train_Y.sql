@@ -1,1 +1,1 @@
-create table train_Y as select o_date,time_slice,start_district_id as district_id,sum(gap) as gap from train_order where o_time>'2016-01-01 01:50:00' group by o_date,time_slice,start_district_id order by o_date,time_slice,start_district_id;
+create table train_Y as select (day(o_date)-1)*144+time_slice as id,o_date,time_slice,start_district_id as district_id,sum(gap) as gap from train_order where o_time>'2016-01-01 01:50:00' group by o_date,time_slice,start_district_id order by o_date,time_slice,start_district_id;
