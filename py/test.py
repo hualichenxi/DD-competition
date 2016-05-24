@@ -3,43 +3,46 @@ import numpy
 import datetime
 from sklearn.externals import joblib
 
-starttime = datetime.datetime.now()
+
+fs = ['gap1','gap2','gap3','ifmpeak','ifepeak','iffestival','ifweekday']
+
+print 'load data'
+
+te_x = numpy.array([[]])
+for f in fs:
+	te = loadColumns('../data/test_x_'+f+'/000000_0')
+	te_x = numpy.concatenate((te_x,te),axis=1)
 
 print 'testing ...\n'
-te_f0 = numpy.load('samples/te_d0.npy')
-te_f1 = numpy.load('samples/te_d1.npy')
-te_d = numpy.concatenate((te_f0,te_f1),axis=1)
 
-clf = joblib.load("model/model.m")
-p = clf.predict(te_d[:,3:])
-te_r = numpy.concatenate((te_d[:,0:3],p.reshape(p.shape[0],1)),axis=1)
+starttime = datetime.datetime.now()
+regr = joblib.load("model/model.m")
+te_y = regr.predict(te_d)
 
 endtime1 = datetime.datetime.now()
 print str((endtime1 - starttime).seconds) + ' seconds used.\n'
 
-print 'write results...'
-
-m_r = {}
-for item in te_r:
-	key = str(item[0])+','+str(item[1])
-	if m_r.has_key(key):
-		arr = m_r[key]
-		if item[3] == 1 and item[2] not in arr:
-			arr.append(item[2])
-			m_r[key] = arr
-	else:
-		if item[3] == 1:
-			m_r[key] = [item[2]]
-		else:
-			m_r[key] = []
-
+te_t = loadTestT('../data/test_t/000000_0')
 f = open('results.csv','w')
-
-keys = m_r.keys()
-for key in keys:
-	line = key + ',' + ':'.join(str(i) for i in m_r[key])	
-	f.write(line + '\n')
+for i,y in enumerate(te_y):
+	o = te_t[i]+','+str(y) + '\n'
+	f.write(o)
 f.close()
 
-endtime2 = datetime.datetime.now()
-print str((endtime2 - endtime1).seconds) + ' seconds used.\n'
+
+def loadColumns(s):
+	f = open(s)
+	lines = f.readlines()
+	f.close()
+	a = []
+	for line in lines:
+		line = line.replace('\\N','0')
+		a.append([float(i) for i in line.strip().split(' \x01')])
+	return numpy.array(ar)
+
+def loadTestT(s):
+	f = open(s)
+	lines = f.readlines()
+	f.close()
+	a = [l.replace('\x01','').strip() for l in lines]
+	return a

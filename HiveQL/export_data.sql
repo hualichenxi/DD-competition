@@ -1,3 +1,5 @@
+insert overwrite local directory 'DD-competition/data/test_t' select concat(district_id,',',o_date,'-',time_slice) from test_t;
+--insert overwrite local directory 'DD-competition/data/train_y' select gap from train_y;
 --insert overwrite local directory 'DD-competition/data/test_x_ifepeak' select if_epeak from test_x_ifepeak;
 
 --insert overwrite local directory 'DD-competition/data/test_x_iffestival' select if_festival from test_x_iffestival;
