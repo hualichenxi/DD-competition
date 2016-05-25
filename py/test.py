@@ -20,6 +20,8 @@ def loadTestT(s):
 	a = [l.replace('\x01','').strip() for l in lines]
 	return a
 
+y_min = 0.0
+y_max = 3872.0
 
 fs = ['gap1','gap2','gap3','ifmpeak','ifepeak','iffestival','ifweekday','dayofweek','dayofweekday']
 
@@ -38,6 +40,7 @@ print 'testing ...\n'
 starttime = datetime.datetime.now()
 regr = joblib.load("model/model.m")
 te_y = regr.predict(te_x)
+te_y = te_y*(y_max-y_min)+y_min
 
 endtime1 = datetime.datetime.now()
 print str((endtime1 - starttime).seconds) + ' seconds used.\n'

@@ -22,12 +22,19 @@ fs = ['gap1','gap2','gap3','ifmpeak','ifepeak','iffestival','ifweekday','dayofwe
 
 print 'load data...\n'
 tr_y = loadColumns('../data/train_y/000000_0')
+y_min,y_max = min(tr_y[:,2]),max(tr_y[:,2])
+tr_y[:,2]=(tr_y[:,2]-y_min)/(y_max-y_min)
+print 'y_min: ' + str(y_min) + '  y_max: ' + str(y_max)
+
 tr_x = numpy.empty([tr_y.shape[0],0])
 for f in fs:
-	tr = loadColumns('../data/train_x_'+f+'/000000_0')
 	print f
-#	print tr.shape
+	tr = loadColumns('../data/train_x_'+f+'/000000_0')
+	tr_min,tr_max = min(tr[:,0]),max(tr[:,0])
+	tr[:,0] = (tr[:,0]-tr_min)/(tr_max-tr_min)
 	tr_x = numpy.concatenate((tr_x,tr),axis=1)
+
+print 'sample #: ' + str(tr_y.shape[0]) 
 
 cv = cross_validation.ShuffleSplit(tr_y.shape[0], n_iter=3, test_size=0.2,random_state=0)
 
