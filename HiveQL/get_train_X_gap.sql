@@ -4,6 +4,10 @@ create table train_x_gap1
 	as select A.id,A.district_id,B.gap as gap1 
 	from train_y A left join train_y B on A.district_id=B.district_id and A.id = B.id+1;
 
+
+select count(*),sum(case when gap1 is null then 1 else 0 end) from train_x_gap1;
+--
+
 --select count(*) from train_x_gap1;
 
 --train_x_gap1: 152653, train_y:163491

@@ -2,6 +2,10 @@
 import numpy
 import datetime
 from sklearn.externals import joblib
+from sklearn import linear_model
+from sklearn import cross_validation
+from sklearn import svm
+from sklearn.ensemble import RandomForestRegressor
 
 def loadColumns(s):
 	f = open(s)
@@ -20,10 +24,9 @@ def loadTestT(s):
 	a = [l.replace('\x01','').strip() for l in lines]
 	return a
 
-y_min = 0.0
-y_max = 3872.0
 
-fs = ['gap1','gap2','gap3','ifmpeak','ifepeak','iffestival','ifweekday','dayofweek','dayofweekday']
+#fs = ['gap1','gap2','gap3','ifmpeak','ifepeak','iffestival','ifweekday','dayofweek','dayofweekday']
+fs = ['gap1','gap2','gap3','gap_average','gap_latest']
 
 print 'load data'
 te_t = loadTestT('../data/test_t/000000_0')
@@ -40,13 +43,12 @@ print 'testing ...\n'
 starttime = datetime.datetime.now()
 regr = joblib.load("model/model.m")
 te_y = regr.predict(te_x)
-te_y = te_y*(y_max-y_min)+y_min
 
 endtime1 = datetime.datetime.now()
 print str((endtime1 - starttime).seconds) + ' seconds used.\n'
 
 
-f = open('results.csv','w')
+f = open('results_5.csv','w')
 for i,y in enumerate(te_y):
 	o = te_t[i]+','+str(y) + '\n'
 	f.write(o)
